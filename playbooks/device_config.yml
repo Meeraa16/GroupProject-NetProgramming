@@ -1,0 +1,33 @@
+---
+- name: Configure Network Device
+  hosts: network_devices
+  gather_facts: no
+
+  tasks:
+    - name: Configure IP address
+      ios_config:
+        lines:
+          - ip address 192.168.1.1 255.255.255.0
+          - no shutdown
+        parents: interface GigabitEthernet0/0
+
+    - name: Configure user account
+      ios_config:
+        lines:
+          - username admin privilege 15 secret admin123
+
+    - name: Configure banner message
+      ios_config:
+        lines:
+          - banner motd ^Unauthorized access is prohibited^
+
+    - name: Configure interface description
+      ios_config:
+        lines:
+          - description Connected to LAN Network
+        parents: interface GigabitEthernet0/0
+
+    - name: Configure static route
+      ios_config:
+        lines:
+          - ip route 0.0.0.0 0.0.0.0 192.168.1.254
