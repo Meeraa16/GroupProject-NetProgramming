@@ -1,0 +1,63 @@
+---
+- name: Collect and Display Linux System Information
+  hosts: all
+  become: yes  
+  gather_facts: no  
+
+  tasks:
+    - name: 1. Get Hostname
+      shell: hostname
+      register: sys_hostname
+
+    - name: 2. Get Current Date and Time
+      shell: date
+      register: sys_date
+
+    - name: 3. Get CPU Information
+      shell: lscpu | grep -E "Model name|CPU\(s\):"
+      register: sys_cpu
+
+    - name: 4. Get Memory Usage
+      shell: free -h
+      register: sys_memory
+
+    - name: 5. Get Disk Usage
+      shell: df -h /
+      register: sys_disk
+
+    - name: 6. Get Logged-in Users
+      shell: who
+      register: sys_users
+
+    - name: 7. Get Top 5 Running Processes by CPU Usage
+      shell: ps -eo pid,user,%cpu,%mem,comm --sort=-%cpu | head -n 6
+      register: sys_top_processes
+
+    - name: Display Collected System Information
+      debug:
+        msg: |
+          =======================================================
+          SYSTEM INFORMATION REPORT 
+          =======================================================
+          
+          [HOSTNAME]
+          {{ sys_hostname.stdout }}
+          
+          [CURRENT DATE & TIME]
+          {{ sys_date.stdout }}
+          
+          [CPU INFORMATION]
+          {{ sys_cpu.stdout }}
+          
+          [MEMORY USAGE]
+          {{ sys_memory.stdout }}
+          
+          [DISK USAGE]
+          {{ sys_disk.stdout }}
+          
+          [LOGGED-IN USERS]
+          {{ sys_users.stdout if sys_users.stdout != '' else 'No users logged in' }}
+          
+          [TOP 5 RUNNING PROCESSES BY CPU]
+          {{ sys_top_processes.stdout }}
+          =======================================================
