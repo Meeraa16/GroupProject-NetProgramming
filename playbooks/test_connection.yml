@@ -1,0 +1,15 @@
+---
+- name: Test connection to Cisco router
+  hosts: routers
+  gather_facts: false
+
+  tasks:
+    - name: Retrieve router version
+      cisco.ios.ios_command:
+        commands:
+          - show version
+      register: router_output
+
+    - name: Display router information
+      ansible.builtin.debug:
+        var: router_output.stdout_lines
