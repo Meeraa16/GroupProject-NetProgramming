@@ -8,5 +8,3 @@ ansible_password: YOUR_PASSWORD
 ansible_become: true
 ansible_become_method: enable
 ansible_become_password: YOUR_ENABLE_PASSWORD
-
-

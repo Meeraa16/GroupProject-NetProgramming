@@ -1,6 +1,6 @@
 ---
 - name: Test connection to Cisco router
-  hosts: routers
+  hosts: network_devices
   gather_facts: false
 
   tasks:
